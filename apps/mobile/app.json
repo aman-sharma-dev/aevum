@@ -1,0 +1,13 @@
+{
+  "expo": {
+    "name": "Wearable Aevum",
+    "slug": "wearable-aevum",
+    "version": "0.1.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "ios": { "supportsTablet": true, "bundleIdentifier": "dev.aevum.wearable" },
+    "android": { "package": "dev.aevum.wearable" },
+    "plugins": ["expo-sqlite"]
+  }
+}
