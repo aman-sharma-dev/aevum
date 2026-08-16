@@ -2,6 +2,7 @@ export const colors = {
   background: "#08111F",
   surface: "#111D2E",
   elevated: "#18283D",
+  soft: "#152235",
   border: "#263B55",
   text: "#F3F7FC",
   muted: "#91A4BC",
@@ -9,4 +10,5 @@ export const colors = {
   warning: "#FFB454",
   danger: "#FF6B7A",
   blue: "#63A8FF",
+  purple: "#A78BFA",
 } as const;

@@ -14,6 +14,7 @@ export class SyncEngine {
   private snapshot: SyncSnapshot = { state: "idle", retryInMs: 0, lastBatchSize: 0 };
   private attempt = 0;
   private timer: ReturnType<typeof setTimeout> | undefined;
+  private syncInProgress = false;
   private readonly listeners = new Set<(snapshot: SyncSnapshot) => void>();
 
   constructor(private readonly apiUrl: string, private readonly batchSize = 100) {}
@@ -25,12 +26,14 @@ export class SyncEngine {
   }
 
   async sync(): Promise<void> {
-    if (this.snapshot.state === "syncing") return;
-    const readings = await pendingReadings(this.batchSize);
-    if (readings.length === 0) { this.publish({ ...this.snapshot, state: "idle", retryInMs: 0 }); return; }
-    const { error: _previousError, ...withoutError } = this.snapshot;
-    this.publish({ ...withoutError, state: "syncing" });
+    if (this.syncInProgress) return;
+    this.syncInProgress = true;
+    let readings: SensorReading[] = [];
     try {
+      readings = await pendingReadings(this.batchSize);
+      if (readings.length === 0) { this.publish({ ...this.snapshot, state: "idle", retryInMs: 0 }); return; }
+      const { error: _previousError, ...withoutError } = this.snapshot;
+      this.publish({ ...withoutError, state: "syncing" });
       const response = await fetch(`${this.apiUrl}/readings/batch`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -43,9 +46,15 @@ export class SyncEngine {
       this.attempt = 0;
       this.publish({ state: "idle", retryInMs: 0, lastBatchSize: readings.length, lastSuccessfulAt: new Date().toISOString() });
       // Continue through newly pending batches, but do not hot-loop permanent server rejections.
-      if ((await pendingReadings(1, false)).length > 0) void this.sync();
+      if ((await pendingReadings(1, false)).length > 0) setTimeout(() => void this.sync(), 0);
     } catch (error) {
-      await this.fail(readings, error);
+      if (readings.length > 0) await this.fail(readings, error);
+      else {
+        const message = error instanceof Error ? error.message : "Unknown sync failure";
+        this.publish({ ...this.snapshot, state: "error", retryInMs: 0, error: message });
+      }
+    } finally {
+      this.syncInProgress = false;
     }
   }
 

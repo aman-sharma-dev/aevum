@@ -148,7 +148,7 @@ export class SimulatedWearableAdapter implements WearableAdapter {
     if (this.state === "CLOCK_DRIFT") measured.setMinutes(measured.getMinutes() + (this.options.clockDriftMinutes ?? 10));
     const noise = (this.random() - 0.5) * (metric === "activity" ? 4 : 2);
     const reading: SensorReading = {
-      id: crypto.randomUUID(),
+      id: this.randomUuid(),
       deviceId: this.options.deviceId,
       metric,
       value: Number(Math.max(0, BASELINES[metric] + noise).toFixed(2)),
@@ -182,5 +182,11 @@ export class SimulatedWearableAdapter implements WearableAdapter {
   }
 
   private random(): number { return (this.options.random ?? Math.random)(); }
+  private randomUuid(): string {
+    return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (token) => {
+      const value = Math.floor(this.random() * 16);
+      return (token === "x" ? value : (value & 0x3) | 0x8).toString(16);
+    });
+  }
   private now(): Date { return new Date((this.options.now ?? (() => new Date()))().getTime()); }
 }

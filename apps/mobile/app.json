@@ -5,9 +5,20 @@
     "version": "0.1.0",
     "orientation": "portrait",
     "userInterfaceStyle": "dark",
-    "newArchEnabled": true,
-    "ios": { "supportsTablet": true, "bundleIdentifier": "dev.aevum.wearable" },
-    "android": { "package": "dev.aevum.wearable" },
-    "plugins": ["expo-sqlite"]
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "dev.aevum.wearable"
+    },
+    "android": {
+      "package": "dev.aevum.wearable"
+    },
+    "plugins": [
+      "expo-sqlite"
+    ],
+    "extra": {
+      "eas": {
+        "projectId": "890be1b6-a763-4d90-800c-3313f6c303c7"
+      }
+    }
   }
 }
