@@ -1,0 +1,53 @@
+name: Feature request
+description: Propose a focused improvement to Aevum
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Before submitting
+      options:
+        - label: I searched existing issues and did not find an equivalent request.
+          required: true
+        - label: This request fits Aevum's wearable telemetry and resilience goals.
+          required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem or opportunity
+      description: Describe the user or engineering problem, not only the desired implementation.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Explain the behavior you would like and how it fits the existing architecture.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Describe other approaches or workarounds you considered.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Primary component
+      options:
+        - Mobile app
+        - API
+        - Data and synchronization
+        - Sensor simulator
+        - Developer experience
+        - Documentation
+        - Cross-cutting
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Additional context
+      description: Include sketches, examples, or compatibility considerations when useful.
